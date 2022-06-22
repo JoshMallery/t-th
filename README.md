@@ -1,7 +1,7 @@
 # T - th assignment
 
-Short Take Home Assignment
+-Short Take Home Assignment
 
-## Start at src/App.js 
+- Start at src/App.js 
 
-## Progress to the src/Components folder afterwards
+- Next go to the src/Components folder afterwards
