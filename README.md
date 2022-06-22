@@ -4,4 +4,4 @@
 
 - Start at src/App.js 
 
-- Next go to the src/Components folder afterwards
+- Next go to the src/Components folder
