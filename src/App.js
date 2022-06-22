@@ -1,25 +1,65 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import './App.css';
+import React, { Component } from 'react';
+import Form from './Components/Form';
+import PokeContainer from './Components/PokeContainer';
+
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      results: [],
+      loading: false,
+      error: '',
+      tempResults: []
+    }
+  }
+
+  componentDidMount = () => {
+    this.setState({ results:[{classfication: "", name: 'Use the search bar to Find pokemon!'}]})
+  }
+
+  getPoke = (searchQuery) => {
+    this.setState({ tempResults: [], results: [] })
+    this.gottaFetchumAll(searchQuery)
+  }
+
+  gottaFetchumAll = (searchQuery, nextPages = '') => {
+
+    this.setState({ loading: true })
+
+    fetch(`https://hungry-woolly-leech.glitch.me/api/pokemon/search/${searchQuery+nextPages+'?chaos=true'}`)
+      .then(response => response.json())
+      .then(response => {
+        this.setState({ tempResults: [...this.state.tempResults, ...response.pokemon] })
+        return response
+    })
+    .then(response => {
+      if(response.nextPage) {
+        this.gottaFetchumAll(searchQuery, `?page=${response.nextPage}`)
+      }
+      return response
+    })
+    .then(response => this.setState({results: [...this.state.tempResults, ...response.pokemon], loading: false }))
+
+      .catch(error =>{
+        console.log('the error',error)
+        this.setState({ error: error.message, loading: false })
+      })
+
+}
+
+  render() {
+    return (
+      <div className="App">
+          <p>Search for a Pokemon!</p>
+          <Form getPoke={this.getPoke}/>
+          { this.state.error && <p>{this.state.error}</p>}
+          {!this.state.loading ? <PokeContainer results={this.state.results} /> : <p>...Loading</p>}
+      </div>
+    );
+
+  }
 }
 
 export default App;
