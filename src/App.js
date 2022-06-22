@@ -43,7 +43,6 @@ class App extends Component {
     .then(response => this.setState({results: [...this.state.tempResults, ...response.pokemon], loading: false }))
 
       .catch(error =>{
-        console.log('the error',error)
         this.setState({ error: error.message, loading: false })
       })
 
@@ -54,7 +53,6 @@ class App extends Component {
       <div className="App">
           <p>Search for a Pokemon!</p>
           <Form getPoke={this.getPoke}/>
-          { this.state.error && <p>{this.state.error}</p>}
           {!this.state.loading ? <PokeContainer results={this.state.results} /> : <p>...Loading</p>}
       </div>
     );
